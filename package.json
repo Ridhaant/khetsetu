@@ -1,0 +1,21 @@
+{
+  "name": "khetsetu",
+  "version": "0.2.0",
+  "private": true,
+  "description": "KhetSetu assisted B2B produce sourcing across India",
+  "scripts": {
+    "dev": "node scripts/pilot-preview.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test apps/web/test/*.test.mjs",
+    "lint": "node scripts/check.mjs",
+    "typecheck": "node apps/web/node_modules/typescript/bin/tsc --noEmit -p apps/web",
+    "api:dev": "npm --prefix apps/api run dev",
+    "api:test": "npm --prefix apps/api test",
+    "pilot:test": "node --test worker/test/*.test.mjs",
+    "db:generate": "node scripts/generate-pilot-migration.mjs",
+    "web:next": "npm --prefix apps/web run dev"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

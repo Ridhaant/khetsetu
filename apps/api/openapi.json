@@ -1,0 +1,1685 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "KhetSetu Development API",
+    "version": "0.2.0",
+    "description": "Development reference only. Volatile data; demo-role authentication. Production startup disabled. INR prices in catalog; all order/payment monetary fields integer paise. UTC timestamps. Default national scope accepts six-digit PIN syntax starting with 1–9, subject to explicit denials. This does not verify postal existence, seller coverage, pickup, or carrier delivery. Configurable pilot/allow/deny policies apply consistently to serviceability, checkout, RFQs, and quote acceptance. Persistent PostgreSQL checkout still requires an explicitly active service area."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000/api/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/catalog": {
+      "get": {
+        "summary": "Browse active, nonexpired sample listings",
+        "security": [],
+        "parameters": [
+          {
+            "name": "pin",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{5}$"
+            },
+            "description": "Serviceability must still be checked at checkout."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sellers": {
+      "get": {
+        "summary": "Browse seeded verified seller fixtures",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/serviceability/{pin}": {
+      "get": {
+        "summary": "Check configured national/pilot development eligibility; no actual logistics verification",
+        "security": [],
+        "parameters": [
+          {
+            "name": "pin",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceabilityResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/demo": {
+      "post": {
+        "summary": "Create an explicit development role session; unavailable in production",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "buyer",
+                      "seller",
+                      "admin"
+                    ]
+                  },
+                  "sellerId": {
+                    "enum": [
+                      "s1",
+                      "s2",
+                      "s3"
+                    ]
+                  }
+                },
+                "required": [
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "expiresIn": {
+                      "const": 900
+                    },
+                    "user": {
+                      "$ref": "#/components/schemas/Actor"
+                    },
+                    "demo": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "accessToken",
+                    "expiresIn",
+                    "user",
+                    "demo"
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/otp/request": {
+      "post": {
+        "summary": "Returns 503 until SMS OTP adapter is integrated",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "phone"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "503": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "List orders restricted by role and ownership",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/checkout": {
+      "post": {
+        "summary": "Reserve inventory and create seller-specific pending orders",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Checkout"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}/transition": {
+      "post": {
+        "summary": "Advance an authorised order state; verified storage proof required for delivery",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "accepted",
+                      "packed",
+                      "dispatched",
+                      "delivered",
+                      "completed",
+                      "cancelled"
+                    ]
+                  },
+                  "proof": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "photo"
+                      },
+                      "reference": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "reference"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller/listings": {
+      "get": {
+        "summary": "List own inventory with reserved quantities",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Listing"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a listing for a seeded verified seller",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Listing"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller/listings/{id}": {
+      "patch": {
+        "summary": "Edit own price, stock, title, MOQ, status, and expiry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "availableQuantity": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "minimumQuantity": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "paused"
+                    ]
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Listing"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rfqs": {
+      "get": {
+        "summary": "List owned buyer RFQs or open seller requirements",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a bulk requirement using the configured India-wide/pilot policy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RFQInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rfqs/{id}/quotes": {
+      "post": {
+        "summary": "Submit an owned-listing quotation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuoteInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quotes/{id}/accept": {
+      "post": {
+        "summary": "Accept one quote and create pending order exactly once",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "post": {
+        "summary": "Create one verified review after buyer completion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "text": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "orderId",
+                  "rating",
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disputes": {
+      "get": {
+        "summary": "List owned or staff-visible disputes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Report a delivered quality issue within 24 hours with scanned evidence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "enum": [
+                      "quality",
+                      "weight",
+                      "missing_items",
+                      "damaged"
+                    ]
+                  },
+                  "details": {
+                    "type": "string"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "orderId",
+                  "reason",
+                  "details",
+                  "evidence"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/disputes/{id}/resolve": {
+      "post": {
+        "summary": "Admin/support resolution with audit record",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resolution": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resolution"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}/refund": {
+      "post": {
+        "summary": "Finance/admin requests a provider refund; completion awaits a signed webhook",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]{8,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amountPaise": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "amountPaise"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit": {
+      "get": {
+        "summary": "Admin/finance audit trail",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/webhook": {
+      "post": {
+        "summary": "Razorpay exact-raw-body HMAC-SHA256 verification and event deduplication",
+        "security": [],
+        "parameters": [
+          {
+            "name": "x-razorpay-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-razorpay-event-id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Request rejected",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ApiError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "requestId": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "requestId"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "ServiceabilityResult": {
+        "type": "object",
+        "properties": {
+          "pin": {
+            "type": "string"
+          },
+          "serviceable": {
+            "type": "boolean",
+            "description": "Development checkout eligibility only; not a real logistics promise."
+          },
+          "scope": {
+            "enum": [
+              "national",
+              "pilot"
+            ]
+          },
+          "validation": {
+            "const": "format-only"
+          },
+          "logisticsVerified": {
+            "const": false
+          },
+          "reason": {
+            "enum": [
+              "invalid_pin",
+              "explicitly_denied",
+              "outside_pilot",
+              "eligible_development"
+            ]
+          },
+          "deliveryChargePaise": {
+            "type": "integer",
+            "description": "Illustrative development fee, not a carrier quote."
+          },
+          "freeDeliveryAbovePaise": {
+            "type": "integer"
+          },
+          "pickupAvailable": {
+            "type": "boolean",
+            "description": "Development workflow eligibility; actual pickup is unverified."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pin",
+          "serviceable",
+          "scope",
+          "validation",
+          "logisticsVerified",
+          "reason",
+          "deliveryChargePaise",
+          "freeDeliveryAbovePaise",
+          "pickupAvailable",
+          "message"
+        ]
+      },
+      "PriceTier": {
+        "type": "object",
+        "properties": {
+          "minQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "minQuantity",
+          "price"
+        ]
+      },
+      "Listing": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "variety": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "sellerId": {
+            "type": "string"
+          },
+          "sellerName": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "availableQuantity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reservedQuantity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "minimumQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "grade": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$"
+          },
+          "organic": {
+            "type": "boolean"
+          },
+          "harvestDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "image": {
+            "type": "string"
+          },
+          "tiers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriceTier"
+            }
+          },
+          "status": {
+            "enum": [
+              "active",
+              "paused"
+            ]
+          },
+          "verified": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "variety",
+          "category",
+          "sellerId",
+          "sellerName",
+          "unit",
+          "price",
+          "availableQuantity",
+          "reservedQuantity",
+          "minimumQuantity",
+          "grade",
+          "location",
+          "pin",
+          "organic",
+          "harvestDate",
+          "expiresAt",
+          "image",
+          "tiers",
+          "status",
+          "verified"
+        ]
+      },
+      "Actor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "role": {
+            "enum": [
+              "buyer",
+              "seller",
+              "admin",
+              "support",
+              "finance",
+              "logistics"
+            ]
+          },
+          "sellerId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role"
+        ]
+      },
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "unitPricePaise": {
+            "type": "integer"
+          },
+          "lineTotalPaise": {
+            "type": "integer"
+          },
+          "grade": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "listingId",
+          "title",
+          "unit",
+          "quantity",
+          "unitPricePaise",
+          "lineTotalPaise",
+          "grade"
+        ]
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "buyerId": {
+            "type": "string"
+          },
+          "sellerId": {
+            "type": "string"
+          },
+          "sellerName": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$"
+          },
+          "fulfilment": {
+            "enum": [
+              "pickup",
+              "delivery"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "subtotalPaise": {
+            "type": "integer"
+          },
+          "feePaise": {
+            "type": "integer"
+          },
+          "taxPaise": {
+            "type": "integer"
+          },
+          "deliveryPaise": {
+            "type": "integer"
+          },
+          "totalPaise": {
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              "pending_payment",
+              "placed",
+              "accepted",
+              "packed",
+              "dispatched",
+              "delivered",
+              "completed",
+              "cancelled"
+            ]
+          },
+          "paymentStatus": {
+            "enum": [
+              "pending",
+              "paid",
+              "refund_pending",
+              "partially_refunded",
+              "refunded"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reservationExpiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeline": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "actorId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status",
+                "at",
+                "actorId"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "groupId",
+          "buyerId",
+          "sellerId",
+          "sellerName",
+          "pin",
+          "fulfilment",
+          "items",
+          "subtotalPaise",
+          "feePaise",
+          "taxPaise",
+          "deliveryPaise",
+          "totalPaise",
+          "status",
+          "paymentStatus",
+          "createdAt",
+          "reservationExpiresAt",
+          "timeline"
+        ]
+      },
+      "Checkout": {
+        "type": "object",
+        "properties": {
+          "pin": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$"
+          },
+          "fulfilment": {
+            "enum": [
+              "pickup",
+              "delivery"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "properties": {
+                "listingId": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number",
+                  "minimum": 0.001,
+                  "maximum": 10000000
+                }
+              },
+              "required": [
+                "listingId",
+                "quantity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "pin",
+          "fulfilment",
+          "items"
+        ]
+      },
+      "CheckoutResult": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "string"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
+          },
+          "payment": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "pending"
+              },
+              "provider": {
+                "const": "razorpay"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "providerOrderId": {
+                "type": "string"
+              },
+              "amountPaise": {
+                "type": "integer"
+              },
+              "currency": {
+                "const": "INR"
+              }
+            },
+            "required": [
+              "status",
+              "provider",
+              "available",
+              "amountPaise",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "groupId",
+          "orders",
+          "payment"
+        ]
+      },
+      "RFQInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0.001,
+            "maximum": 10000000
+          },
+          "unit": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{5}$"
+          },
+          "deliveryBy": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "category",
+          "quantity",
+          "unit",
+          "pin",
+          "deliveryBy",
+          "notes"
+        ]
+      },
+      "QuoteInput": {
+        "type": "object",
+        "properties": {
+          "listingId": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "quantity": {
+            "type": "number",
+            "minimum": 0.001,
+            "maximum": 10000000
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "listingId",
+          "price",
+          "quantity",
+          "validUntil",
+          "notes"
+        ]
+      },
+      "ListingInput": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "enum": [
+              "Vegetables",
+              "Fruits",
+              "Grains",
+              "Pulses",
+              "Spices",
+              "Oilseeds"
+            ]
+          },
+          "unit": {
+            "enum": [
+              "kg",
+              "gram",
+              "quintal",
+              "tonne",
+              "litre",
+              "piece",
+              "box",
+              "bag",
+              "crate"
+            ]
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "availableQuantity": {
+            "type": "number",
+            "minimum": 0
+          },
+          "minimumQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "grade": {
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        },
+        "required": [
+          "title",
+          "category",
+          "unit",
+          "price",
+          "availableQuantity",
+          "minimumQuantity",
+          "grade"
+        ]
+      }
+    }
+  }
+}

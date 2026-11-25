@@ -1,0 +1,26 @@
+name: Validate KhetSetu
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm --prefix apps/web ci
+      - run: npm run db:generate
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run pilot:test
+      - run: npm test
+      - run: npm --prefix apps/api run build
+      - run: npm --prefix apps/api run lint
+      - run: npm --prefix apps/api test
+      - run: npm --prefix apps/mobile test

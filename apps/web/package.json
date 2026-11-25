@@ -1,0 +1,24 @@
+{
+  "name": "@khetsetu/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "node ../../scripts/check.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "lucide-react": "0.577.0"
+  },
+  "devDependencies": {
+    "vite": "5.4.21",
+    "typescript": "6.0.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3"
+  }
+}

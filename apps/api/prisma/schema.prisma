@@ -1,0 +1,409 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  phoneHash     String?  @unique
+  email         String?  @unique
+  role          String   @default("buyer")
+  status        String   @default("active")
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+  deletedAt     DateTime? @db.Timestamptz(3)
+  profile       Profile?
+  addresses     Address[]
+  sessions      Session[]
+  seller        SellerProfile?
+  checkouts     Checkout[]
+  rfqs          RFQ[]
+  notifications Notification[]
+  tickets       SupportTicket[]
+}
+model Profile {
+  userId          String @id
+  displayName     String
+  buyerType       String @default("household")
+  language        String @default("en")
+  consentVersion  String
+  consentAt       DateTime @db.Timestamptz(3)
+  user            User @relation(fields:[userId], references:[id], onDelete:Cascade)
+}
+model Address {
+  id          String @id @default(dbgenerated("gen_random_uuid()::text"))
+  userId      String
+  name        String
+  line1       String
+  line2       String?
+  city        String
+  state       String
+  pin         String
+  instructions String?
+  latitude    Decimal? @db.Decimal(10,7)
+  longitude   Decimal? @db.Decimal(10,7)
+  user        User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([userId])
+}
+model Session {
+  id               String @id @default(dbgenerated("gen_random_uuid()::text"))
+  userId           String
+  refreshTokenHash String @unique
+  familyId         String
+  expiresAt        DateTime @db.Timestamptz(3)
+  revokedAt        DateTime? @db.Timestamptz(3)
+  user             User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  @@index([familyId])
+}
+model SellerProfile {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  userId       String @unique
+  name         String
+  sellerType   String
+  location     String
+  originPin    String
+  verified     Boolean @default(false)
+  payoutRef    String?
+  compliance   Json @default("{}")
+  user         User @relation(fields:[userId],references:[id])
+  verifications Verification[]
+  listings     Listing[]
+  orders       Order[]
+  quotes       Quote[]
+  payouts      Payout[]
+}
+model Verification {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  sellerId     String
+  status       String @default("pending")
+  documentRef  String
+  rejectionReason String?
+  reviewedBy   String?
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  seller       SellerProfile @relation(fields:[sellerId],references:[id])
+  @@index([status])
+}
+model Category {
+  id           String @id
+  name         String
+  nameHi       String
+  active       Boolean @default(true)
+  products     Product[]
+}
+model Product {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  categoryId   String
+  name         String
+  variety      String
+  attributes   Json @default("{}")
+  category     Category @relation(fields:[categoryId],references:[id])
+  listings     Listing[]
+}
+model Listing {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  sellerId     String
+  productId    String
+  title        String
+  unit         String
+  grade        String
+  pricePaise   Int
+  minimumMilli Int @default(1000)
+  status       String @default("draft")
+  pricingMode  String @default("fixed")
+  organic      Boolean @default(false)
+  harvestDate  DateTime? @db.Date
+  expiresAt    DateTime @db.Timestamptz(3)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  seller       SellerProfile @relation(fields:[sellerId],references:[id])
+  product      Product @relation(fields:[productId],references:[id])
+  inventory    InventoryLot?
+  tiers        PriceTier[]
+  quotes       Quote[]
+  @@index([status,expiresAt])
+  @@index([sellerId])
+}
+model InventoryLot {
+  id            String @id @default(dbgenerated("gen_random_uuid()::text"))
+  listingId     String @unique
+  stockMilli    Int
+  reservedMilli Int @default(0)
+  version       Int @default(0)
+  listing       Listing @relation(fields:[listingId],references:[id])
+}
+model PriceTier {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  listingId    String
+  minMilli     Int
+  pricePaise   Int
+  listing      Listing @relation(fields:[listingId],references:[id],onDelete:Cascade)
+  @@unique([listingId,minMilli])
+}
+model Checkout {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  buyerId      String
+  key          String
+  fingerprint  String
+  pin          String
+  status       String @default("pending_payment")
+  totalPaise   Int
+  expiresAt    DateTime @db.Timestamptz(3)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  response     Json?
+  buyer        User @relation(fields:[buyerId],references:[id])
+  orders       Order[]
+  payment      Payment?
+  @@unique([buyerId,key])
+  @@index([status,expiresAt])
+}
+model Order {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  checkoutId   String
+  sellerId     String
+  status       String @default("pending_payment")
+  paymentStatus String @default("pending")
+  subtotalPaise Int
+  feePaise     Int @default(0)
+  taxPaise     Int @default(0)
+  deliveryPaise Int @default(0)
+  totalPaise   Int
+  snapshot     Json
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  checkout     Checkout @relation(fields:[checkoutId],references:[id])
+  seller       SellerProfile @relation(fields:[sellerId],references:[id])
+  items        OrderItem[]
+  shipments    Shipment[]
+  refunds      Refund[]
+  review       Review?
+  disputes     Dispute[]
+  @@index([sellerId,status])
+}
+model OrderItem {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  orderId      String
+  listingId    String
+  quantityMilli Int
+  unitPricePaise Int
+  lineTotalPaise Int
+  snapshot     Json
+  order        Order @relation(fields:[orderId],references:[id])
+  @@index([orderId])
+}
+model Payment {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  checkoutId   String @unique
+  provider     String @default("razorpay")
+  providerOrderId String? @unique
+  providerPaymentId String? @unique
+  amountPaise  Int
+  currency     String @default("INR")
+  status       String @default("pending")
+  checkout     Checkout @relation(fields:[checkoutId],references:[id])
+  refunds      Refund[]
+}
+model WebhookEvent {
+  id           String @id
+  provider     String
+  payloadHash  String
+  status       String @default("received")
+  receivedAt   DateTime @default(now()) @db.Timestamptz(3)
+  processedAt  DateTime? @db.Timestamptz(3)
+}
+model Refund {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  orderId      String
+  paymentId    String
+  key          String @unique
+  amountPaise  Int
+  providerRefundId String? @unique
+  status       String @default("requested")
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  order        Order @relation(fields:[orderId],references:[id])
+  payment      Payment @relation(fields:[paymentId],references:[id])
+}
+model Payout {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  sellerId     String
+  providerRef  String? @unique
+  grossPaise   Int
+  feePaise     Int
+  netPaise     Int
+  status       String @default("pending")
+  settledAt    DateTime? @db.Timestamptz(3)
+  seller       SellerProfile @relation(fields:[sellerId],references:[id])
+}
+model RFQ {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  buyerId      String
+  title        String
+  category     String
+  unit         String
+  quantityMilli Int
+  pin          String
+  deliveryBy   DateTime @db.Timestamptz(3)
+  notes        String
+  status       String @default("open")
+  buyer        User @relation(fields:[buyerId],references:[id])
+  quotes       Quote[]
+}
+model Quote {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  rfqId        String
+  sellerId     String
+  listingId    String
+  unitPricePaise Int
+  quantityMilli Int
+  validUntil   DateTime @db.Timestamptz(3)
+  status       String @default("open")
+  notes        String
+  rfq          RFQ @relation(fields:[rfqId],references:[id])
+  seller       SellerProfile @relation(fields:[sellerId],references:[id])
+  listing      Listing @relation(fields:[listingId],references:[id])
+}
+model Shipment {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  orderId      String
+  partner      String
+  assignedTo   String?
+  status       String @default("pending")
+  trackingRef  String?
+  proofRef     String?
+  pickupAt     DateTime? @db.Timestamptz(3)
+  deliveredAt  DateTime? @db.Timestamptz(3)
+  order        Order @relation(fields:[orderId],references:[id])
+}
+model Review {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  orderId      String @unique
+  buyerId      String
+  rating       Int
+  text         String
+  verifiedPurchase Boolean @default(true)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  order        Order @relation(fields:[orderId],references:[id])
+}
+model Dispute {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  orderId      String
+  buyerId      String
+  reason       String
+  details      String
+  evidence     Json
+  internalNotes Json @default("[]")
+  resolution   String?
+  status       String @default("open")
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  order        Order @relation(fields:[orderId],references:[id])
+}
+model Conversation {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  contextType  String
+  contextId    String
+  participants Json
+  messages     Message[]
+}
+model Message {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  conversationId String
+  senderId     String
+  body         String
+  reported     Boolean @default(false)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  conversation Conversation @relation(fields:[conversationId],references:[id])
+}
+model Notification {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  userId       String
+  channel      String
+  template     String
+  data         Json
+  status       String @default("queued")
+  key          String @unique
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  user         User @relation(fields:[userId],references:[id])
+}
+model Promotion {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  code         String @unique
+  rule         Json
+  startsAt     DateTime @db.Timestamptz(3)
+  endsAt       DateTime @db.Timestamptz(3)
+}
+model CommissionRule {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  name         String
+  basisPoints  Int
+  config       Json
+  effectiveAt  DateTime @db.Timestamptz(3)
+}
+model ServiceArea {
+  pin          String @id
+  city         String
+  state        String
+  active       Boolean @default(false)
+  deliveryPaise Int @default(4900)
+  freeAbovePaise Int @default(100000)
+  boundary     Unsupported("geography(MultiPolygon,4326)")?
+}
+model SupportTicket {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  userId       String
+  subject      String
+  details      String
+  status       String @default("open")
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  user         User @relation(fields:[userId],references:[id])
+}
+model AuditLog {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  actorId      String
+  action       String
+  targetId     String
+  metadata     Json
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  @@index([targetId,createdAt])
+}
+model Cart {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  buyerId      String @unique
+  items        Json @default("[]")
+  updatedAt    DateTime @default(now()) @db.Timestamptz(3)
+}
+model Negotiation {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  contextId    String
+  buyerId      String
+  sellerId     String
+  offers       Json @default("[]")
+  status       String @default("open")
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+}
+model CatalogueOption {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  kind         String
+  name         String
+  config       Json @default("{}")
+  active       Boolean @default(true)
+  @@unique([kind,name])
+}
+model MediaObject {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  ownerId      String
+  objectKey    String @unique
+  contentType  String
+  sha256       String
+  bytes        Int
+  scanStatus   String @default("pending")
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+}
+model OutboxEvent {
+  id           String @id @default(dbgenerated("gen_random_uuid()::text"))
+  topic        String
+  payload      Json
+  key          String @unique
+  status       String @default("pending")
+  attempts     Int @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  @@index([status,createdAt])
+}

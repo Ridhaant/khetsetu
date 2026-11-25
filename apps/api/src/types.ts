@@ -1,0 +1,16 @@
+export type Role = 'buyer' | 'seller' | 'admin' | 'support' | 'finance' | 'logistics';
+export interface Actor { id: string; role: Role; sellerId?: string }
+export interface PriceTier { minQuantity: number; price: number }
+export interface Listing { id: string; title: string; variety: string; category: string; sellerId: string; sellerName: string; unit: string; price: number; availableQuantity: number; reservedQuantity: number; minimumQuantity: number; grade: string; location: string; pin: string; organic: boolean; harvestDate: string; expiresAt: string; image: string; tiers: PriceTier[]; status: 'active' | 'paused'; verified: boolean }
+export type OrderStatus = 'pending_payment' | 'placed' | 'accepted' | 'packed' | 'dispatched' | 'delivered' | 'completed' | 'cancelled';
+export interface OrderItem { listingId: string; title: string; unit: string; quantity: number; unitPricePaise: number; lineTotalPaise: number; grade: string }
+export interface Order { id: string; groupId: string; buyerId: string; sellerId: string; sellerName: string; pin: string; fulfilment: 'pickup' | 'delivery'; items: OrderItem[]; subtotalPaise: number; feePaise: number; taxPaise: number; deliveryPaise: number; totalPaise: number; status: OrderStatus; paymentStatus: 'pending' | 'paid' | 'refund_pending' | 'partially_refunded' | 'refunded'; createdAt: string; reservationExpiresAt: string; timeline: { status: string; at: string; actorId: string }[]; proof?: { kind: 'photo'; reference: string } }
+export interface Rfq { id: string; buyerId: string; title: string; category: string; quantity: number; unit: string; pin: string; deliveryBy: string; notes: string; status: 'open' | 'accepted' | 'closed'; createdAt: string }
+export interface Quote { id: string; rfqId: string; sellerId: string; sellerName: string; listingId: string; price: number; quantity: number; validUntil: string; notes: string; status: 'open' | 'accepted' | 'expired' }
+export interface Audit { id: string; actorId: string; action: string; targetId: string; at: string; previousHash: string; hash: string }
+export interface Dispute { id: string; orderId: string; buyerId: string; reason: string; details: string; evidence: string[]; status: 'open' | 'resolved'; resolution?: string; refundPaise?: number; createdAt: string }
+export interface Review { id: string; orderId: string; buyerId: string; sellerId: string; rating: number; text: string; verifiedPurchase: true; createdAt: string }
+export interface CheckoutInput { pin: string; items: { listingId: string; quantity: number }[]; fulfilment: 'pickup' | 'delivery' }
+export interface ServiceabilityResult {pin:string;serviceable:boolean;scope:'national'|'pilot';validation:'format-only';logisticsVerified:false;reason:'invalid_pin'|'explicitly_denied'|'outside_pilot'|'eligible_development';deliveryChargePaise:number;freeDeliveryAbovePaise:number;pickupAvailable:boolean;message:string}
+export interface CheckoutResult { groupId: string; orders: Order[]; payment: { status: 'pending'; provider: 'razorpay'; available: boolean; reason?: string; providerOrderId?: string; amountPaise: number; currency: 'INR' } }
+export class DomainError extends Error { constructor(public status: number, public code: string, message: string) { super(message); } }

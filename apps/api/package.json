@@ -1,0 +1,7 @@
+{
+  "name": "@khetsetu/api", "version": "0.1.0", "private": true, "type": "module",
+  "engines": { "node": ">=24.0.0" },
+  "scripts": { "dev": "node --env-file-if-exists=.env --experimental-transform-types --watch src/server.ts", "start": "node --env-file-if-exists=.env dist/server.js", "build": "node scripts/build.mjs", "typecheck": "tsc --noEmit", "lint": "node scripts/lint.mjs", "test": "node --experimental-transform-types --test test/*.test.ts", "prisma:generate": "prisma generate", "db:migrate": "prisma migrate deploy", "db:seed": "node --env-file-if-exists=.env --experimental-transform-types prisma/seed.ts" },
+  "dependencies": { "@prisma/client": "6.19.0" },
+  "devDependencies": { "@types/node": "^24.0.0", "prisma": "6.19.0", "typescript": "^5.9.0" }
+}

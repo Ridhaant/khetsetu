@@ -1,0 +1,44 @@
+# Development infrastructure only. The demo API does not use these services yet.
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: khetsetu
+      POSTGRES_USER: khetsetu
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_only_password}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U khetsetu -d khetsetu"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["redis-data:/data"]
+  storage:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-local_development}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-local_development_change_me}
+    ports: ["127.0.0.1:9000:9000", "127.0.0.1:9001:9001"]
+    volumes: ["storage-data:/data"]
+  demo-api:
+    profiles: ["app"]
+    build: ../apps/api
+    environment:
+      DEMO_MODE: "true"
+      SERVICEABILITY_MODE: ${SERVICEABILITY_MODE:-national}
+      SERVICEABILITY_PILOT_PINS: ${SERVICEABILITY_PILOT_PINS:-400008}
+      SERVICEABILITY_ALLOW_PINS: ${SERVICEABILITY_ALLOW_PINS:-}
+      SERVICEABILITY_DENY_PINS: ${SERVICEABILITY_DENY_PINS:-}
+      HOST: "0.0.0.0"
+      CORS_ORIGINS: http://localhost:3000,http://localhost:8081
+    ports: ["127.0.0.1:4000:4000"]
+volumes:
+  postgres-data:
+  redis-data:
+  storage-data:
