@@ -85,8 +85,7 @@ All screenshots below were captured directly from live Playwright runs against t
       <sub>Allowlisted operator view with live request pipeline metrics, PIN/phone/reference search, CSV export, status workflows, and optimistic version-locked quotes.</sub>
     </td>
     <td width="50%" valign="top">
-      <a href="docs/screenshots/mobile-catalogue.png"><img src="docs/screenshots/mobile-catalogue.png" alt="Responsive Mobile Produce Cards" width="100%" /></a>
-      <br />
+      <p align="center"><a href="docs/screenshots/mobile-catalogue.png"><img src="docs/screenshots/mobile-catalogue.png" alt="Responsive Mobile Produce Cards" width="135" /></a></p>
       <strong>6. Mobile Responsive Layout (390×844)</strong>
       <br />
       <sub>Zero horizontal overflow across filter chips, dual-action crop cards, and bilingual controls on handheld viewports.</sub>
