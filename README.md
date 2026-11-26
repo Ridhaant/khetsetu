@@ -10,12 +10,13 @@ Support: **+91 70216 10641** · **redantthakur@gmail.com**
 
 ## How it works
 
-1. **Public enquiry & bilingual UI (English / हिंदी):** Buyers post produce requirements and farmers list available stock across India. No online payment or stock lock is created by the form.
-2. **Private receipt tracking:** Each submission issues a `KS-...` reference and a secret key stored in the user's browser (or Expo SecureStore on mobile) to inspect status updates, compare landed supplier quotes, or withdraw and erase contact details.
-3. **Operations desk:** Coordinators review requests by PIN, enter integer-paise supplier quotes (produce, packing, delivery, fees), compare totals for matching grades/units, record agreed quotes, and export CSVs.
-4. **Static GitHub Pages mode vs. full backend:**
+1. **Comprehensive Indian Produce Directory (`87` fruits, vegetables & staples):** Browse seasonal and year-round vegetables, gourds & roots, leafy greens & herbs, exotic salad crops, tropical/citrus/orchard fruits, and grains/pulses/spices in English and हिंदी. Tap any item to prefill an enquiry or supply listing.
+2. **Public enquiry & bilingual UI (English / हिंदी):** Buyers post produce requirements and farmers list available stock across India. No online payment or stock lock is created by the form.
+3. **Private receipt tracking:** Each submission issues a `KS-...` reference and a secret key stored in the user's browser (or Expo SecureStore on mobile) to inspect status updates, compare landed supplier quotes, or withdraw and erase contact details.
+4. **Operations desk:** Coordinators review requests by PIN, enter integer-paise supplier quotes (produce, packing, delivery, fees), compare totals for matching grades/units, record agreed quotes, and export CSVs.
+5. **Static GitHub Pages mode vs. full backend:**
    - When hosted statically on **GitHub Pages**, the web app runs cleanly in browser-backed preview mode with one-click **WhatsApp** and **Email** handoff buttons on confirmation.
-   - When run locally with `npm run dev` (or deployed to Cloudflare Workers + D1), the frontend automatically connects to the `/api/pilot` Worker backend and SQLite/D1 storage.
+   - When run locally with `npm run dev` (or deployed to Cloudflare Workers + D1 via [`wrangler.toml`](wrangler.toml)), the frontend automatically connects to the `/api/pilot` Worker backend and SQLite/D1 storage.
 
 ## Quick start (local)
 

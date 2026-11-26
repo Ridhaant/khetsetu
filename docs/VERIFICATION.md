@@ -1,5 +1,20 @@
 # Verification and release status
 
+## Humanized web, Produce Directory & GitHub Pages checks, 26 November 2026
+
+| Check | Result |
+| --- | --- |
+| `npm run db:generate` | Passed (`Pilot schema and immutable initial SQL migration match`) |
+| `npm run build` | Passed (Vite built `apps/web/dist` with relative `./` base and bundled Worker `dist/server/index.js` with 5 embedded assets) |
+| `npm run typecheck` | Passed (`tsc --noEmit -p apps/web`, 0 errors) |
+| `npm run lint` | Passed (`14` web modules, 0 syntax or safety errors) |
+| `npm run pilot:test` | `20` passed, `0` failed, `0` skipped |
+| `npm test` | `12` passed, `0` failed, `0` skipped (6 marketplace domain + 4 static preview store + 2 produce catalog tests covering 87 Indian fruits, vegetables & staples) |
+| `npm --prefix apps/api run build` / `lint` / `test` | Build & lint passed across `10` modules; `22` tests passed, `0` failed, `0` skipped |
+| `npm --prefix apps/mobile test` | `9` passed, `0` failed, `0` skipped |
+
+Total automated tests passing: **63** (`20` Worker + `12` Web + `22` API + `9` Mobile).
+
 ## Humanized web & GitHub Pages checks, 25 November 2026
 
 | Check | Result |

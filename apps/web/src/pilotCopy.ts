@@ -7,6 +7,7 @@ export type Copy = {
   brandTagline: string;
   navBuy: string;
   navSell: string;
+  navCatalogue: string;
   navHowItWorks: string;
   navSupport: string;
   trackRequest: string;
@@ -52,6 +53,23 @@ export type Copy = {
   howTitleLine2: string;
   howLead: string;
   howSteps: [string, string][];
+  catalogueEyebrow: string;
+  catalogueTitle: string;
+  catalogueLead: string;
+  catalogueSearchPlaceholder: string;
+  catalogueSearchAria: string;
+  catalogueSeasonAria: string;
+  catalogueVarietiesLabel: string;
+  catalogueOriginsLabel: string;
+  catalogueTypicalUnit: (moq: number, unit: string) => string;
+  catalogueBuyCta: string;
+  catalogueSellCta: string;
+  catalogueShowAll: (total: number) => string;
+  catalogueShowFewer: string;
+  catalogueNoMatches: string;
+  catalogueResetFilters: string;
+  catalogueSelectedNotice: (label: string) => string;
+  catalogueClearSelection: string;
   intakeEyebrow: string;
   intakeTitle: string;
   intakeBody: string;
@@ -244,6 +262,7 @@ export const pilotCopy: Record<Language, Copy> = {
     brandTagline: 'FARM TO BUSINESS',
     navBuy: 'Buy produce',
     navSell: 'Sell produce',
+    navCatalogue: 'Produce directory',
     navHowItWorks: 'How it works',
     navSupport: 'Support',
     trackRequest: 'Track request',
@@ -321,6 +340,24 @@ export const pilotCopy: Record<Language, Copy> = {
         'Once stock, grade, and transport are agreed, we coordinate pickup or delivery directly with both sides.',
       ],
     ],
+    catalogueEyebrow: 'INDIAN FRUITS & VEGETABLES DIRECTORY',
+    catalogueTitle: 'All fruits, vegetables, and staples we source.',
+    catalogueLead:
+      'Browse seasonal and year-round Indian produce across daily vegetables, gourds, leafy greens, citrus, orchard fruits, and staples. Tap any crop to prefill your enquiry.',
+    catalogueSearchPlaceholder: 'Search tomato, mango, bhindi, lauki, Nashik, आम…',
+    catalogueSearchAria: 'Search fruits and vegetables',
+    catalogueSeasonAria: 'Filter by harvest season',
+    catalogueVarietiesLabel: 'Popular varieties',
+    catalogueOriginsLabel: 'Key belts',
+    catalogueTypicalUnit: (moq: number, unit: string) => `Typical wholesale: ${moq}+ ${unit}`,
+    catalogueBuyCta: 'Request quote',
+    catalogueSellCta: 'I supply this',
+    catalogueShowAll: (total: number) => `Show all ${total} produce items`,
+    catalogueShowFewer: 'Show fewer items',
+    catalogueNoMatches: 'No fruits or vegetables match that search.',
+    catalogueResetFilters: 'Show all produce',
+    catalogueSelectedNotice: (label: string) => `Selected from directory: ${label}`,
+    catalogueClearSelection: 'Clear',
     intakeEyebrow: 'SEND AN ENQUIRY',
     intakeTitle: "Tell us what you need or what you're harvesting.",
     intakeBody:
@@ -623,6 +660,7 @@ export const pilotCopy: Record<Language, Copy> = {
     brandTagline: 'खेत से व्यापार तक',
     navBuy: 'उपज खरीदें',
     navSell: 'उपज बेचें',
+    navCatalogue: 'उपज सूची',
     navHowItWorks: 'यह कैसे काम करता है',
     navSupport: 'सहायता',
     trackRequest: 'अनुरोध ट्रैक करें',
@@ -700,6 +738,24 @@ export const pilotCopy: Record<Language, Copy> = {
         'स्टॉक, ग्रेड और वाहन तय होने के बाद हमारी टीम दोनों पक्षों के साथ पिकअप या डिलीवरी कराती है।',
       ],
     ],
+    catalogueEyebrow: 'भारतीय फल व सब्ज़ी डायरेक्टरी',
+    catalogueTitle: 'सभी प्रकार के फल, सब्ज़ियाँ और अनाज।',
+    catalogueLead:
+      'दैनिक सब्ज़ियाँ, लौकी-कद्दू, पत्तेदार साग, मौसमी और बारहमासी फल चुनें। किसी भी उपज पर क्लिक कर सीधे अनुरोध भरें।',
+    catalogueSearchPlaceholder: 'खोजें: टमाटर, आम, भिंडी, लौकी, नासिक, Mango…',
+    catalogueSearchAria: 'फल और सब्ज़ियाँ खोजें',
+    catalogueSeasonAria: 'मौसम के अनुसार चुनें',
+    catalogueVarietiesLabel: 'प्रमुख किस्में',
+    catalogueOriginsLabel: 'मुख्य क्षेत्र',
+    catalogueTypicalUnit: (moq: number, unit: string) => `थोक मात्रा: ${moq}+ ${unit}`,
+    catalogueBuyCta: 'भाव मँगवाएँ',
+    catalogueSellCta: 'मेरे पास उपलब्ध',
+    catalogueShowAll: (total: number) => `सभी ${total} उपज देखें`,
+    catalogueShowFewer: 'कम दिखाएँ',
+    catalogueNoMatches: 'आपकी खोज से मेल खाता कोई फल या सब्ज़ी नहीं मिली।',
+    catalogueResetFilters: 'सभी उपज दिखाएँ',
+    catalogueSelectedNotice: (label: string) => `सूची से चुनी गई उपज: ${label}`,
+    catalogueClearSelection: 'हटाएँ',
     intakeEyebrow: 'अनुरोध भेजें',
     intakeTitle: 'बताएँ आपको क्या चाहिए या कौन सी फसल तैयार है।',
     intakeBody:

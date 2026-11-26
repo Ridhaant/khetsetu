@@ -1,0 +1,16 @@
+name = "khetsetu-pilot"
+main = "dist/server/index.js"
+compatibility_date = "2026-11-01"
+
+[build]
+command = "npm --prefix apps/web ci && npm run build"
+
+# Configure your Cloudflare D1 database ID and set secrets via `wrangler secret put`:
+#   wrangler secret put OPS_ADMIN_EMAIL
+#   wrangler secret put RATE_LIMIT_SALT
+#   wrangler secret put SITE_ORIGIN
+[[d1_databases]]
+binding = "DB"
+database_name = "khetsetu-pilot-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "drizzle"

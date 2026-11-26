@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
+  Apple,
+  Carrot,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -25,10 +27,18 @@ import {
   Sprout,
   Store,
   Truck,
+  Wheat,
   X,
 } from 'lucide-react';
 import { INDIAN_PIN_PATTERN, hasIndianPinFormat } from './domain.mjs';
 import { pilotCopy, type Copy, type Language } from './pilotCopy';
+import {
+  PRODUCE_GROUPS,
+  SEASONS,
+  catalogSummaryCounts,
+  filterProduceCatalog,
+  produceCatalog,
+} from './produceCatalog.mjs';
 import {
   createReceiptCredentials,
   detectBackendMode,
@@ -66,6 +76,14 @@ type FormState = {
   notes: string;
   website: string;
   consent: boolean;
+};
+
+type ProducePrefill = {
+  id: string;
+  label: string;
+  produce: string;
+  unit: string;
+  quantity: string;
 };
 
 type SubmittedSummary = ReceiptKey & {
@@ -165,6 +183,7 @@ export default function PilotApp() {
   const [online, setOnline] = useState(navigator.onLine);
   const [backendMode, setBackendMode] = useState<BackendMode>('api');
   const [receipts, setReceipts] = useState<ReceiptKey[]>(getSavedReceipts);
+  const [prefill, setPrefill] = useState<ProducePrefill | null>(null);
 
   const t = pilotCopy[lang];
 
@@ -204,14 +223,15 @@ export default function PilotApp() {
   }, [lang]);
 
   useEffect(() => {
-    if (['home', 'request', 'support', 'how-it-works', 'faq'].includes(route)) {
+    if (['home', 'catalogue', 'request', 'support', 'how-it-works', 'faq'].includes(route)) {
       document.getElementById(route)?.scrollIntoView({ block: 'start' });
     } else if (['operations', 'track'].includes(route)) {
       window.scrollTo({ top: 0 });
     }
   }, [route]);
 
-  function openRequestForm(nextKind: Kind) {
+  function openRequestForm(nextKind: Kind, chosen?: ProducePrefill) {
+    if (chosen) setPrefill(chosen);
     setKind(nextKind);
     location.hash = 'request';
     setTimeout(() => {
@@ -264,6 +284,9 @@ export default function PilotApp() {
             <button type="button" onClick={() => openRequestForm('farmer')}>
               {t.navSell}
             </button>
+            <a href="#catalogue" onClick={() => setMenuOpen(false)}>
+              {t.navCatalogue}
+            </a>
             <a href="#how-it-works" onClick={() => setMenuOpen(false)}>
               {t.navHowItWorks}
             </a>
@@ -490,6 +513,12 @@ export default function PilotApp() {
               </div>
             </section>
 
+            <ProduceCatalogue
+              t={t}
+              lang={lang}
+              onSelect={(nextKind, item) => openRequestForm(nextKind, item)}
+            />
+
             <section className="section shell intake-section" id="request">
               <div className="intake-intro">
                 <span className="eyebrow">{t.intakeEyebrow}</span>
@@ -526,6 +555,8 @@ export default function PilotApp() {
                 backendMode={backendMode}
                 saveReceipt={saveReceipt}
                 showPrivacy={() => setPolicy('privacy')}
+                prefill={prefill}
+                clearPrefill={() => setPrefill(null)}
               />
             </section>
 
@@ -622,6 +653,8 @@ function Intake({
   backendMode,
   saveReceipt,
   showPrivacy,
+  prefill,
+  clearPrefill,
 }: {
   kind: Kind;
   setKind: (kind: Kind) => void;
@@ -629,6 +662,8 @@ function Intake({
   backendMode: BackendMode;
   saveReceipt: (key: ReceiptKey) => void;
   showPrivacy: () => void;
+  prefill: ProducePrefill | null;
+  clearPrefill: () => void;
 }) {
   const emptyForm = (nextKind: Kind): FormState => ({
     name: '',
@@ -659,12 +694,36 @@ function Intake({
   useEffect(() => {
     if (kindRef.current !== kind) {
       kindRef.current = kind;
-      setForm(emptyForm(kind));
+      setForm((prev) => ({
+        ...emptyForm(kind),
+        ...(prefill
+          ? {
+              produce: prefill.produce,
+              unit: prefill.unit,
+              quantity: prefill.quantity,
+            }
+          : prev.produce
+            ? { produce: prev.produce, unit: prev.unit, quantity: prev.quantity }
+            : {}),
+      }));
       setError('');
       setSuccess(null);
       attempt.current = null;
     }
-  }, [kind]);
+  }, [kind, prefill]);
+
+  useEffect(() => {
+    if (!prefill) return;
+    setForm((prev) => ({
+      ...prev,
+      produce: prefill.produce,
+      unit: prefill.unit,
+      quantity: prev.quantity || prefill.quantity,
+    }));
+    setSuccess(null);
+    setError('');
+    attempt.current = null;
+  }, [prefill]);
 
   function updateField<K extends keyof FormState>(name: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -907,16 +966,42 @@ function Intake({
             </small>
           </label>
 
+          {prefill && (
+            <div className="prefill-pill" role="status">
+              <span>{t.catalogueSelectedNotice(prefill.label)}</span>
+              <button
+                type="button"
+                className="inline-link"
+                onClick={() => {
+                  clearPrefill();
+                  updateField('produce', '');
+                }}
+              >
+                {t.catalogueClearSelection}
+              </button>
+            </div>
+          )}
+
           <label>
             {t.labelProduce} *
             <input
               required
+              list="produce-options"
               maxLength={120}
               minLength={2}
               value={form.produce}
               onChange={(e) => updateField('produce', e.target.value)}
               placeholder={t.placeholderProduce}
             />
+            <datalist id="produce-options">
+              {produceCatalog.map((item) => (
+                <option
+                  key={item.id}
+                  value={`${item.name} — ${item.varieties[0]}`}
+                  label={`${item.nameHi} · ${item.category}`}
+                />
+              ))}
+            </datalist>
           </label>
 
           <div className="form-grid three">
@@ -2113,5 +2198,204 @@ function PolicyModal({
         </button>
       </div>
     </div>
+  );
+}
+
+function ProduceCatalogue({
+  t,
+  lang,
+  onSelect,
+}: {
+  t: Copy;
+  lang: Language;
+  onSelect: (kind: Kind, prefill: ProducePrefill) => void;
+}) {
+  const [group, setGroup] = useState('all');
+  const [season, setSeason] = useState('all');
+  const [search, setSearch] = useState('');
+  const [expanded, setExpanded] = useState(false);
+
+  const summary = catalogSummaryCounts();
+  const matches = filterProduceCatalog(produceCatalog, { group, season, search });
+  const showingAll = expanded || Boolean(search.trim()) || group !== 'all' || season !== 'all';
+  const visible = showingAll ? matches : matches.slice(0, 12);
+
+  const groupCounts: Record<string, number> = {
+    all: produceCatalog.length,
+    fruits: summary.fruits,
+    vegetables: produceCatalog.filter((i) => i.group === 'vegetables').length,
+    gourds: produceCatalog.filter((i) => i.group === 'gourds').length,
+    leafy: produceCatalog.filter((i) => i.group === 'leafy').length,
+    exotic: produceCatalog.filter((i) => i.group === 'exotic').length,
+    staples: summary.staples,
+  };
+
+  function iconForGroup(itemGroup: string) {
+    if (itemGroup === 'fruits') return <Apple size={18} />;
+    if (itemGroup === 'staples') return <Wheat size={18} />;
+    if (itemGroup === 'leafy') return <Leaf size={18} />;
+    return <Carrot size={18} />;
+  }
+
+  return (
+    <section className="catalogue-section shell section" id="catalogue">
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow">{t.catalogueEyebrow}</span>
+          <h2>{t.catalogueTitle}</h2>
+        </div>
+        <p>{t.catalogueLead}</p>
+      </div>
+
+      <div className="catalogue-controls">
+        <label className="search-field">
+          <Search size={18} />
+          <input
+            type="search"
+            aria-label={t.catalogueSearchAria}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={t.catalogueSearchPlaceholder}
+          />
+        </label>
+
+        <label className="filter-label season-filter">
+          <span>{t.catalogueSeasonAria}</span>
+          <Select value={season} onChange={setSeason}>
+            {SEASONS.map((opt) => (
+              <option key={opt.id} value={opt.id}>
+                {lang === 'hi' ? opt.hi : opt.en}
+              </option>
+            ))}
+          </Select>
+        </label>
+      </div>
+
+      <div className="group-pills" role="tablist" aria-label="Produce categories">
+        {PRODUCE_GROUPS.map((g) => (
+          <button
+            key={g.id}
+            type="button"
+            role="tab"
+            aria-selected={group === g.id}
+            className={group === g.id ? 'group-pill active' : 'group-pill'}
+            onClick={() => setGroup(g.id)}
+          >
+            <span>{lang === 'hi' ? g.hi : g.en}</span>
+            <small>{groupCounts[g.id] ?? 0}</small>
+          </button>
+        ))}
+      </div>
+
+      {!visible.length ? (
+        <div className="empty-state compact">
+          <Sprout size={32} />
+          <p>{t.catalogueNoMatches}</p>
+          <button
+            type="button"
+            className="button outline small"
+            onClick={() => {
+              setGroup('all');
+              setSeason('all');
+              setSearch('');
+            }}
+          >
+            {t.catalogueResetFilters}
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="produce-grid">
+            {visible.map((item) => {
+              const title = lang === 'hi' ? item.nameHi : item.name;
+              const altTitle = lang === 'hi' ? item.name : item.nameHi;
+              const seasonLabel =
+                SEASONS.find((s) => s.id === item.season)?.[lang === 'hi' ? 'hi' : 'en'] ??
+                item.season;
+
+              return (
+                <article className="produce-card" key={item.id}>
+                  <div className="produce-card-top">
+                    <span
+                      className="produce-badge"
+                      style={{
+                        backgroundColor: `${item.accent}18`,
+                        color: item.accent,
+                      }}
+                    >
+                      {iconForGroup(item.group)}
+                    </span>
+                    <span className="season-tag">{seasonLabel}</span>
+                  </div>
+
+                  <h3>{title}</h3>
+                  <small className="produce-alt">{altTitle}</small>
+
+                  <dl className="produce-meta">
+                    <div>
+                      <dt>{t.catalogueVarietiesLabel}</dt>
+                      <dd>{item.varieties.join(' · ')}</dd>
+                    </div>
+                    <div>
+                      <dt>{t.catalogueOriginsLabel}</dt>
+                      <dd>{item.origins.join(', ')}</dd>
+                    </div>
+                  </dl>
+
+                  <p className="produce-moq">
+                    {t.catalogueTypicalUnit(item.typicalMoq, t.units[item.unit as keyof typeof t.units] ?? item.unit)}
+                  </p>
+
+                  <div className="produce-actions">
+                    <button
+                      type="button"
+                      className="button primary small"
+                      onClick={() =>
+                        onSelect('buyer', {
+                          id: item.id,
+                          label: title,
+                          produce: `${item.name} — ${item.varieties[0]}`,
+                          unit: item.unit,
+                          quantity: String(item.typicalMoq),
+                        })
+                      }
+                    >
+                      {t.catalogueBuyCta}
+                    </button>
+                    <button
+                      type="button"
+                      className="button outline small"
+                      onClick={() =>
+                        onSelect('farmer', {
+                          id: item.id,
+                          label: title,
+                          produce: `${item.name} — ${item.varieties[0]}`,
+                          unit: item.unit,
+                          quantity: String(item.typicalMoq),
+                        })
+                      }
+                    >
+                      {t.catalogueSellCta}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {!search.trim() && group === 'all' && season === 'all' && matches.length > 12 && (
+            <div className="catalogue-more">
+              <button
+                type="button"
+                className="button outline"
+                onClick={() => setExpanded(!expanded)}
+              >
+                {expanded ? t.catalogueShowFewer : t.catalogueShowAll(matches.length)}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </section>
   );
 }
