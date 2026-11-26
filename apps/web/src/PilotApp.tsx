@@ -2315,6 +2315,17 @@ function ProduceCatalogue({
 
               return (
                 <article className="produce-card" key={item.id}>
+                  <div className="produce-thumb">
+                    <img
+                      src={item.image}
+                      alt={`${title} (${altTitle})`}
+                      loading="lazy"
+                      decoding="async"
+                      width={400}
+                      height={280}
+                    />
+                  </div>
+
                   <div className="produce-card-top">
                     <span
                       className="produce-badge"

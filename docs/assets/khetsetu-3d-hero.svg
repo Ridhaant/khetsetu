@@ -1,0 +1,284 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" role="img" aria-label="KhetSetu 3D isometric stacked architecture hero graphic">
+  <defs>
+    <radialGradient id="bgGlow" cx="68%" cy="48%" r="65%">
+      <stop offset="0%" stop-color="#134231" stop-opacity="0.95" />
+      <stop offset="52%" stop-color="#092118" stop-opacity="0.98" />
+      <stop offset="100%" stop-color="#040e0a" />
+    </radialGradient>
+
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4ade80" />
+      <stop offset="55%" stop-color="#a3e635" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+
+    <linearGradient id="topPlateL4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.86" />
+    </linearGradient>
+    <linearGradient id="topPlateL3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.65" />
+    </linearGradient>
+    <linearGradient id="topPlateL2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.48" />
+      <stop offset="100%" stop-color="#b45309" stop-opacity="0.62" />
+    </linearGradient>
+    <linearGradient id="topPlateL1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a2f" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#0b1f17" stop-opacity="0.98" />
+    </linearGradient>
+
+    <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#a3e635" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.9" />
+    </linearGradient>
+
+    <filter id="glowSoft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowStrong" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <clipPath id="canvasClip">
+      <rect width="1200" height="480" rx="18" />
+    </clipPath>
+
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      @keyframes floatTop {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-9px); }
+      }
+      @keyframes floatMid1 {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+      }
+      @keyframes floatMid2 {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-3px); }
+      }
+      @keyframes pulseRing {
+        0%, 100% { opacity: 0.35; stroke-width: 1.5; }
+        50% { opacity: 0.95; stroke-width: 2.6; }
+      }
+      @keyframes orbitSpin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .layer-top { animation: floatTop 5.2s ease-in-out infinite; }
+      .layer-mid1 { animation: floatMid1 5.2s ease-in-out infinite 0.35s; }
+      .layer-mid2 { animation: floatMid2 5.2s ease-in-out infinite 0.7s; }
+      .ring-pulse { animation: pulseRing 3.2s ease-in-out infinite; }
+      .orbit-ring { transform-origin: 830px 295px; animation: orbitSpin 28s linear infinite; }
+    </style>
+  </defs>
+
+  <g clip-path="url(#canvasClip)">
+    <!-- Deep obsidian-emerald spatial background -->
+    <rect width="1200" height="480" fill="url(#bgGlow)" />
+
+    <!-- Subtle 3D perspective floor grid -->
+    <g stroke="#22c55e" stroke-opacity="0.09" stroke-width="1">
+      <path d="M0 370 L1200 370 M0 398 L1200 398 M0 432 L1200 432 M0 472 L1200 472" />
+      <path d="M120 480 L380 340 M280 480 L500 340 M440 480 L620 340 M600 480 L740 340 M760 480 L860 340 M920 480 L980 340 M1080 480 L1100 340" />
+    </g>
+
+    <!-- Ambient volumetric glow behind 3D stack -->
+    <ellipse cx="830" cy="300" rx="250" ry="125" fill="#10b981" fill-opacity="0.13" filter="url(#glowSoft)" />
+    <ellipse cx="830" cy="390" rx="195" ry="62" fill="#000000" fill-opacity="0.55" />
+
+    <!-- Left Engineering Copy & Live Stack Badges -->
+    <g transform="translate(54, 52)">
+      <rect x="0" y="0" width="328" height="28" rx="14" fill="#0d3526" stroke="#34d399" stroke-opacity="0.45" />
+      <circle cx="16" cy="14" r="4.5" fill="#4ade80">
+        <animate attributeName="opacity" values="1;0.3;1" dur="1.8s" repeatCount="indefinite" />
+      </circle>
+      <text x="30" y="18.5" fill="#a7f3d0" font-size="11.5" font-weight="700" letter-spacing="1.4" class="mono">PRODUCTION MONOREPO · v0.2.0</text>
+
+      <text x="0" y="84" fill="#ffffff" font-size="44" font-weight="800" letter-spacing="-1.2" class="sans">KhetSetu</text>
+      <text x="218" y="84" fill="url(#accentGrad)" font-size="22" font-weight="700" class="sans">खेतसेतु</text>
+
+      <text x="0" y="122" fill="#d1fae5" font-size="19" font-weight="600" class="sans">
+        Farm-to-Business B2B Produce Sourcing Infrastructure
+      </text>
+      <text x="0" y="152" fill="#86efac" fill-opacity="0.82" font-size="13.5" class="sans">
+        <tspan x="0" dy="0">Zero-dependency edge gateway, ACID transactional checkout,</tspan>
+        <tspan x="0" dy="20">integer-paise quoting &amp; 89 locally bundled crop images.</tspan>
+      </text>
+
+      <!-- Stack Metric Pills -->
+      <g transform="translate(0, 206)">
+        <g>
+          <rect x="0" y="0" width="132" height="62" rx="10" fill="#0b291e" stroke="#22c55e" stroke-opacity="0.35" />
+          <text x="14" y="29" fill="#4ade80" font-size="22" font-weight="800" class="mono">89</text>
+          <text x="14" y="48" fill="#a7f3d0" font-size="11.5" class="sans">Crops + WebP</text>
+        </g>
+        <g transform="translate(144, 0)">
+          <rect x="0" y="0" width="132" height="62" rx="10" fill="#0b291e" stroke="#22c55e" stroke-opacity="0.35" />
+          <text x="14" y="29" fill="#a3e635" font-size="22" font-weight="800" class="mono">63</text>
+          <text x="14" y="48" fill="#a7f3d0" font-size="11.5" class="sans">Passing Tests</text>
+        </g>
+        <g transform="translate(288, 0)">
+          <rect x="0" y="0" width="144" height="62" rx="10" fill="#0b291e" stroke="#fbbf24" stroke-opacity="0.38" />
+          <text x="14" y="29" fill="#fbbf24" font-size="22" font-weight="800" class="mono">INT ₹</text>
+          <text x="14" y="48" fill="#fde68a" font-size="11.5" class="sans">Paise Precision</text>
+        </g>
+      </g>
+
+      <!-- Tech Tag Bar -->
+      <g transform="translate(0, 294)" class="mono" font-size="11.5" font-weight="600">
+        <rect x="0" y="0" width="94" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="12" y="17" fill="#6ee7b7">React 18</text>
+
+        <rect x="104" y="0" width="110" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="116" y="17" fill="#6ee7b7">TypeScript</text>
+
+        <rect x="224" y="0" width="130" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="236" y="17" fill="#6ee7b7">Workers + D1</text>
+
+        <rect x="364" y="0" width="128" height="26" rx="6" fill="#0f3325" stroke="#fbbf24" stroke-opacity="0.3" />
+        <text x="376" y="17" fill="#fcd34d">Postgres ACID</text>
+
+        <rect x="0" y="36" width="140" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="12" y="53" fill="#a7f3d0">Expo React Native</text>
+
+        <rect x="150" y="36" width="136" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="162" y="53" fill="#a7f3d0">SHA-256 + HMAC</text>
+
+        <rect x="296" y="36" width="136" height="26" rx="6" fill="#0f3325" stroke="#34d399" stroke-opacity="0.3" />
+        <text x="308" y="53" fill="#a7f3d0">EN / हिंदी UI</text>
+      </g>
+    </g>
+
+    <!-- Rotating Dashed Orbit Ellipse Around Isometric Stack -->
+    <g transform="translate(830, 310)">
+      <ellipse cx="0" cy="0" rx="238" ry="102" fill="none" stroke="#34d399" stroke-opacity="0.24" stroke-width="1.5" stroke-dasharray="8 8" class="ring-pulse" />
+      <ellipse cx="0" cy="0" rx="196" ry="82" fill="none" stroke="#a3e635" stroke-opacity="0.16" stroke-width="1" />
+    </g>
+
+    <!-- Vertical Isometric Optical Data Buses -->
+    <g stroke="url(#beamGrad)" stroke-width="2" stroke-dasharray="5 5" opacity="0.72">
+      <line x1="830" y1="350" x2="830" y2="98" />
+      <line x1="726" y1="298" x2="726" y2="148" />
+      <line x1="934" y1="298" x2="934" y2="148" />
+    </g>
+
+    <!-- LAYER 1: Foundation Data & Storage Slab -->
+    <g transform="translate(830, 322)">
+      <!-- Left face -->
+      <polygon points="-170,0 0,85 0,107 -170,22" fill="#0a241a" stroke="#22c55e" stroke-opacity="0.45" stroke-width="1.2" />
+      <!-- Right face -->
+      <polygon points="0,85 170,0 170,22 0,107" fill="#061710" stroke="#22c55e" stroke-opacity="0.35" stroke-width="1.2" />
+      <!-- Top face -->
+      <polygon points="0,-85 170,0 0,85 -170,0" fill="url(#topPlateL1)" stroke="#34d399" stroke-opacity="0.65" stroke-width="1.5" />
+      <!-- Inner recessed grid -->
+      <polygon points="0,-60 120,0 0,60 -120,0" fill="none" stroke="#34d399" stroke-opacity="0.22" stroke-width="1" />
+      <!-- Isometric projected plane text -->
+      <g transform="translate(-8, 12) matrix(0.866, 0.433, -0.866, 0.433, 0, 0)">
+        <text x="-76" y="-8" fill="#6ee7b7" font-size="14" font-weight="700" class="mono">D1 SQLite · PostgreSQL</text>
+        <text x="-76" y="14" fill="#a7f3d0" fill-opacity="0.75" font-size="11" class="sans">SERIALIZABLE · AUDIT LEDGER</text>
+      </g>
+    </g>
+
+    <!-- LAYER 2: ACID Lock & Pricing Plane -->
+    <g class="layer-mid2">
+      <g transform="translate(830, 260)">
+        <polygon points="-155,0 0,77 0,94 -155,17" fill="#78350f" fill-opacity="0.68" stroke="#fbbf24" stroke-opacity="0.7" stroke-width="1.2" />
+        <polygon points="0,77 155,0 155,17 0,94" fill="#451a03" fill-opacity="0.78" stroke="#f59e0b" stroke-opacity="0.55" stroke-width="1.2" />
+        <polygon points="0,-77 155,0 0,77 -155,0" fill="url(#topPlateL2)" stroke="#fcd34d" stroke-opacity="0.85" stroke-width="1.6" />
+        <g transform="translate(-10, 10) matrix(0.866, 0.433, -0.866, 0.433, 0, 0)">
+          <text x="-76" y="-6" fill="#fef3c7" font-size="14" font-weight="700" class="mono">OPTIMISTIC VERSION LOCK</text>
+          <text x="-76" y="15" fill="#fde68a" font-size="11" class="sans">Integer Paise · Idempotency Key</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- LAYER 3: Cloudflare Worker Edge & Security Gate -->
+    <g class="layer-mid1">
+      <g transform="translate(830, 198)">
+        <polygon points="-142,0 0,71 0,87 -142,16" fill="#065f46" fill-opacity="0.78" stroke="#34d399" stroke-opacity="0.8" stroke-width="1.2" />
+        <polygon points="0,71 142,0 142,16 0,87" fill="#064e3b" fill-opacity="0.88" stroke="#10b981" stroke-opacity="0.65" stroke-width="1.2" />
+        <polygon points="0,-71 142,0 0,71 -142,0" fill="url(#topPlateL3)" stroke="#6ee7b7" stroke-opacity="0.9" stroke-width="1.6" />
+        <g transform="translate(-6, 10) matrix(0.866, 0.433, -0.866, 0.433, 0, 0)">
+          <text x="-72" y="-6" fill="#ecfdf5" font-size="14" font-weight="700" class="mono">EDGE WORKER GATEWAY</text>
+          <text x="-72" y="15" fill="#a7f3d0" font-size="11" class="sans">CSP · Origin · Rate Limit · Auth</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- LAYER 4: Client Experience Plane (React + Expo + Pages) -->
+    <g class="layer-top">
+      <g transform="translate(830, 134)">
+        <polygon points="-128,0 0,64 0,78 -128,14" fill="#047857" stroke="#a7f3d0" stroke-width="1.3" />
+        <polygon points="0,64 128,0 128,14 0,78" fill="#065f46" stroke="#6ee7b7" stroke-width="1.3" />
+        <polygon points="0,-64 128,0 0,64 -128,0" fill="url(#topPlateL4)" stroke="#d1fae5" stroke-width="1.8" />
+        <!-- Isometric produce thumbnail mosaic on top surface -->
+        <g transform="matrix(0.866, 0.433, -0.866, 0.433, 0, -2)">
+          <rect x="-56" y="-40" width="32" height="22" rx="4" fill="#ef4444" fill-opacity="0.9" stroke="#ffffff" stroke-width="1" />
+          <rect x="-18" y="-40" width="32" height="22" rx="4" fill="#f59e0b" fill-opacity="0.9" stroke="#ffffff" stroke-width="1" />
+          <rect x="20" y="-40" width="32" height="22" rx="4" fill="#22c55e" fill-opacity="0.92" stroke="#ffffff" stroke-width="1" />
+          <text x="-58" y="4" fill="#ffffff" font-size="14.5" font-weight="800" class="mono">CLIENT + CATALOG</text>
+          <text x="-58" y="23" fill="#ecfdf5" font-size="11" font-weight="600" class="sans">89 Produce Cards · EN / हिंदी</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- Animated Glowing Telemetry Packets Traveling Along Vertical Isometric Conduits -->
+    <circle r="4.8" fill="#a3e635" filter="url(#glowStrong)">
+      <animateMotion dur="2.6s" repeatCount="indefinite" path="M830,132 L830,348" />
+    </circle>
+    <circle r="4.2" fill="#fbbf24" filter="url(#glowStrong)">
+      <animateMotion dur="2.9s" repeatCount="indefinite" path="M726,298 L726,148" />
+    </circle>
+    <circle r="4.2" fill="#34d399" filter="url(#glowStrong)">
+      <animateMotion dur="2.4s" repeatCount="indefinite" path="M934,148 L934,298" />
+    </circle>
+
+    <!-- Floating Callout Badges on Right Side -->
+    <g transform="translate(998, 92)">
+      <line x1="-68" y1="54" x2="0" y2="20" stroke="#4ade80" stroke-opacity="0.6" stroke-dasharray="3 3" />
+      <circle cx="-68" cy="54" r="3.5" fill="#4ade80" />
+      <rect x="0" y="0" width="166" height="44" rx="8" fill="#082419" fill-opacity="0.92" stroke="#4ade80" stroke-opacity="0.55" />
+      <text x="12" y="18" fill="#4ade80" font-size="10.5" font-weight="700" class="mono">DUAL-MODE ADAPTER</text>
+      <text x="12" y="34" fill="#e2e8f0" font-size="11" class="sans">Worker API ↔ Pages Local</text>
+    </g>
+
+    <g transform="translate(998, 224)">
+      <line x1="-54" y1="0" x2="0" y2="18" stroke="#fbbf24" stroke-opacity="0.65" stroke-dasharray="3 3" />
+      <circle cx="-54" cy="0" r="3.5" fill="#fbbf24" />
+      <rect x="0" y="0" width="166" height="44" rx="8" fill="#211607" fill-opacity="0.92" stroke="#fbbf24" stroke-opacity="0.55" />
+      <text x="12" y="18" fill="#fbbf24" font-size="10.5" font-weight="700" class="mono">CONCURRENCY SAFE</text>
+      <text x="12" y="34" fill="#fef3c7" font-size="11" class="sans">Compare-And-Swap State</text>
+    </g>
+
+    <g transform="translate(998, 342)">
+      <line x1="-28" y1="-4" x2="0" y2="18" stroke="#6ee7b7" stroke-opacity="0.6" stroke-dasharray="3 3" />
+      <circle cx="-28" cy="-4" r="3.5" fill="#6ee7b7" />
+      <rect x="0" y="0" width="166" height="44" rx="8" fill="#082419" fill-opacity="0.92" stroke="#34d399" stroke-opacity="0.5" />
+      <text x="12" y="18" fill="#6ee7b7" font-size="10.5" font-weight="700" class="mono">FAIL-CLOSED SECURITY</text>
+      <text x="12" y="34" fill="#d1fae5" font-size="11" class="sans">CSP + 90-Day PII Erasure</text>
+    </g>
+
+    <!-- Bottom Caption Strip -->
+    <rect x="0" y="446" width="1200" height="34" fill="#040d09" fill-opacity="0.88" />
+    <line x1="0" y1="446" x2="1200" y2="446" stroke="#22c55e" stroke-opacity="0.22" />
+    <text x="54" y="467" fill="#6ee7b7" font-size="11" class="mono">
+      github.com/Ridhaant/khetsetu  ·  live: ridhaant.github.io/khetsetu/  ·  ci: 4 suites / 63 assertions green
+    </text>
+    <text x="1146" y="467" text-anchor="end" fill="#86efac" fill-opacity="0.7" font-size="11" class="mono">
+      ISOMETRIC SYSTEM TOPOLOGY
+    </text>
+  </g>
+</svg>

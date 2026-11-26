@@ -141,6 +141,7 @@ export const produceCatalog = RAW_PRODUCE.map(
     unit,
     typicalMoq,
     accent,
+    image: `./crops/${id}.webp`,
   }),
 );
 

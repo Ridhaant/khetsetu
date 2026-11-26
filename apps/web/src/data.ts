@@ -24,9 +24,6 @@ export type Listing = {
   status?: string;
 };
 
-const photo = (id: string) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=700&q=80`;
-
 const baseListings: Listing[] = [
   {
     id: 'l-tomato',
@@ -44,7 +41,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: false,
     harvestDate: '2026-11-21',
-    image: photo('photo-1546094096-0df4bcaaa337'),
+    image: './crops/veg-tomato.webp',
     rating: 4.9,
     reviews: 128,
     badge: 'Freshly harvested',
@@ -69,7 +66,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: true,
     harvestDate: '2026-11-21',
-    image: photo('photo-1576045057995-568f588f82fb'),
+    image: './crops/leafy-palak.webp',
     rating: 4.8,
     reviews: 86,
     badge: 'Certified organic',
@@ -91,7 +88,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: false,
     harvestDate: '2026-11-19',
-    image: photo('photo-1508747703725-719777637510'),
+    image: './crops/veg-red-onion.webp',
     rating: 4.9,
     reviews: 214,
     badge: 'Bulk price available',
@@ -116,7 +113,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: false,
     harvestDate: '2026-11-20',
-    image: photo('photo-1571771894821-ce9b6c11b08e'),
+    image: './crops/fruit-banana.webp',
     rating: 4.7,
     reviews: 65,
     tiers: [{ min: 10, price: 52 }],
@@ -137,7 +134,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: true,
     harvestDate: '2026-11-21',
-    image: photo('photo-1445282768818-728615cc910a'),
+    image: './crops/root-carrot.webp',
     rating: 4.8,
     reviews: 73,
     badge: 'Certified organic',
@@ -159,7 +156,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: false,
     harvestDate: '2026-11-01',
-    image: photo('photo-1586201375761-83865001e31c'),
+    image: './crops/staple-rice.webp',
     rating: 4.9,
     reviews: 102,
     badge: 'FPO direct',
@@ -184,7 +181,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: false,
     harvestDate: '2026-10-30',
-    image: photo('photo-1515543904379-3d757afe72e4'),
+    image: './crops/staple-dal.webp',
     rating: 4.8,
     reviews: 57,
     tiers: [{ min: 25, price: 112 }],
@@ -205,7 +202,7 @@ const baseListings: Listing[] = [
     pin: '400008',
     organic: true,
     harvestDate: '2026-10-28',
-    image: photo('photo-1615485500704-8e990f9900f7'),
+    image: './crops/staple-turmeric.webp',
     rating: 4.9,
     reviews: 44,
     badge: 'Single origin',
@@ -233,7 +230,7 @@ const directoryListings: Listing[] = produceCatalog
     pin: '400008',
     organic: item.group === 'leafy',
     harvestDate: '2026-11-25',
-    image: './produce.svg',
+    image: item.image,
     rating: 4.8,
     reviews: 24,
     badge: item.season,

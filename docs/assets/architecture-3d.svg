@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="100%" role="img" aria-label="KhetSetu 3D isometric architecture and security request pipeline">
+  <defs>
+    <linearGradient id="archBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#05130e" />
+      <stop offset="55%" stop-color="#0a2319" />
+      <stop offset="100%" stop-color="#040e0a" />
+    </linearGradient>
+
+    <linearGradient id="isoGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.88" />
+    </linearGradient>
+    <linearGradient id="isoTeal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.88" />
+      <stop offset="100%" stop-color="#0f766e" stop-opacity="0.88" />
+    </linearGradient>
+    <linearGradient id="isoAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.88" />
+    </linearGradient>
+    <linearGradient id="isoSlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e4033" />
+      <stop offset="100%" stop-color="#0c2018" />
+    </linearGradient>
+
+    <filter id="nodeGlow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <clipPath id="archClip">
+      <rect width="1200" height="560" rx="18" />
+    </clipPath>
+
+    <style>
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      @keyframes bobA {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-6px); }
+      }
+      @keyframes bobB {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-4px); }
+      }
+      .bob-a { animation: bobA 4.6s ease-in-out infinite; }
+      .bob-b { animation: bobB 4.6s ease-in-out infinite 0.55s; }
+    </style>
+  </defs>
+
+  <g clip-path="url(#archClip)">
+    <rect width="1200" height="560" fill="url(#archBg)" />
+
+    <!-- Subtle isometric lattice -->
+    <g stroke="#34d399" stroke-opacity="0.06" stroke-width="1">
+      <path d="M0 120 L1200 120 M0 240 L1200 240 M0 360 L1200 360 M0 480 L1200 480" />
+      <path d="M150 0 L150 560 M450 0 L450 560 M750 0 L750 560 M1050 0 L1050 560" />
+    </g>
+
+    <!-- Header -->
+    <text x="48" y="46" fill="#4ade80" font-size="11.5" font-weight="700" letter-spacing="1.6" class="mono">END-TO-END REQUEST, SECURITY &amp; TRANSACTION PIPELINE</text>
+    <text x="48" y="76" fill="#ffffff" font-size="25" font-weight="800" class="sans">3D Isometric Execution Topology Across Worker Edge, Static Pages &amp; Commerce Core</text>
+
+    <!-- Connecting Data Buses (drawn under isometric nodes) -->
+    <!-- Primary Pilot Flow: Clients -> Adapter -> Edge Gate -> D1/SQLite -->
+    <path id="busPrimary" d="M 190 218 L 430 218 L 690 218 L 965 218" fill="none" stroke="#34d399" stroke-width="3" stroke-opacity="0.4" />
+    <path d="M 190 218 L 430 218 L 690 218 L 965 218" fill="none" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="8 8" stroke-opacity="0.9" />
+
+    <!-- Static GitHub Pages fallback branch -->
+    <path id="busFallback" d="M 430 250 L 430 410 L 690 410" fill="none" stroke="#2dd4bf" stroke-width="2.5" stroke-dasharray="6 6" stroke-opacity="0.7" />
+
+    <!-- Enterprise API + PostgreSQL branch -->
+    <path id="busCommerce" d="M 190 255 L 190 410 L 430 410" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.45" />
+    <path d="M 690 255 L 690 315 L 965 315 L 965 410" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-dasharray="6 6" stroke-opacity="0.78" />
+    <path id="busAudit" d="M 965 255 L 965 405" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-opacity="0.85" />
+
+    <!-- STAGE 1 (Top-Left Isometric Block): Clients -->
+    <g transform="translate(175, 206)" class="bob-a">
+      <ellipse cx="0" cy="76" rx="108" ry="26" fill="#000000" fill-opacity="0.45" />
+      <polygon points="-98,0 0,48 0,68 -98,20" fill="#047857" stroke="#6ee7b7" stroke-width="1.2" />
+      <polygon points="0,48 98,0 98,20 0,68" fill="#064e3b" stroke="#34d399" stroke-width="1.2" />
+      <polygon points="0,-48 98,0 0,48 -98,0" fill="url(#isoGreen)" stroke="#d1fae5" stroke-width="1.5" />
+      <g transform="matrix(0.866, 0.433, -0.866, 0.433, -3, 2)">
+        <text x="-48" y="-2" fill="#ffffff" font-size="13" font-weight="800" class="mono">CLIENTS</text>
+        <text x="-48" y="16" fill="#ecfdf5" font-size="10.5" class="sans">Web + Expo</text>
+      </g>
+    </g>
+    <g transform="translate(48, 282)">
+      <rect x="0" y="0" width="254" height="86" rx="10" fill="#082419" fill-opacity="0.92" stroke="#34d399" stroke-opacity="0.42" />
+      <text x="14" y="22" fill="#4ade80" font-size="11.5" font-weight="700" class="mono">1. CLIENT INTERFACES</text>
+      <text x="14" y="42" fill="#d1fae5" font-size="11.5" class="sans">• React 18 Bilingual UI (EN / हिंदी)</text>
+      <text x="14" y="60" fill="#d1fae5" font-size="11.5" class="sans">• 89 Crops + ./crops/*.webp (0 CSP blocks)</text>
+      <text x="14" y="76" fill="#a7f3d0" font-size="11.5" class="sans">• React Native Expo Android/iOS</text>
+    </g>
+
+    <!-- STAGE 2 (Center-Left Isometric Block): Runtime Adapter -->
+    <g transform="translate(430, 206)" class="bob-b">
+      <ellipse cx="0" cy="76" rx="108" ry="26" fill="#000000" fill-opacity="0.45" />
+      <polygon points="-98,0 0,48 0,68 -98,20" fill="#0f766e" stroke="#5eead4" stroke-width="1.2" />
+      <polygon points="0,48 98,0 98,20 0,68" fill="#115e59" stroke="#2dd4bf" stroke-width="1.2" />
+      <polygon points="0,-48 98,0 0,48 -98,0" fill="url(#isoTeal)" stroke="#ccfbf1" stroke-width="1.5" />
+      <g transform="matrix(0.866, 0.433, -0.866, 0.433, -3, 2)">
+        <text x="-48" y="-2" fill="#ffffff" font-size="13" font-weight="800" class="mono">ADAPTER</text>
+        <text x="-48" y="16" fill="#f0fdfa" font-size="10.5" class="sans">pilotClient</text>
+      </g>
+    </g>
+    <g transform="translate(318, 282)">
+      <rect x="0" y="0" width="232" height="86" rx="10" fill="#072222" fill-opacity="0.92" stroke="#2dd4bf" stroke-opacity="0.45" />
+      <text x="14" y="22" fill="#5eead4" font-size="11.5" font-weight="700" class="mono">2. DUAL-MODE ROUTING</text>
+      <text x="14" y="42" fill="#ccfbf1" font-size="11.5" class="sans">• Live /api/pilot/* Worker detection</text>
+      <text x="14" y="60" fill="#ccfbf1" font-size="11.5" class="sans">• Auto GitHub Pages fallback store</text>
+      <text x="14" y="76" fill="#99f6e4" font-size="11.5" class="sans">• Idempotency UUIDv4 per retry</text>
+    </g>
+
+    <!-- STAGE 3 (Center-Right Isometric Block): Worker Security Gate -->
+    <g transform="translate(690, 206)" class="bob-a">
+      <ellipse cx="0" cy="76" rx="108" ry="26" fill="#000000" fill-opacity="0.45" />
+      <polygon points="-98,0 0,48 0,68 -98,20" fill="#b45309" stroke="#fcd34d" stroke-width="1.2" />
+      <polygon points="0,48 98,0 98,20 0,68" fill="#78350f" stroke="#f59e0b" stroke-width="1.2" />
+      <polygon points="0,-48 98,0 0,48 -98,0" fill="url(#isoAmber)" stroke="#fef3c7" stroke-width="1.5" />
+      <g transform="matrix(0.866, 0.433, -0.866, 0.433, -4, 2)">
+        <text x="-50" y="-2" fill="#1c1917" font-size="12.5" font-weight="800" class="mono">EDGE GATE</text>
+        <text x="-50" y="16" fill="#451a03" font-size="10.5" font-weight="700" class="sans">worker/pilot</text>
+      </g>
+    </g>
+    <g transform="translate(576, 282)">
+      <rect x="0" y="0" width="234" height="86" rx="10" fill="#211607" fill-opacity="0.92" stroke="#fbbf24" stroke-opacity="0.45" />
+      <text x="14" y="22" fill="#fbbf24" font-size="11.5" font-weight="700" class="mono">3. FAIL-CLOSED SECURITY</text>
+      <text x="14" y="42" fill="#fef3c7" font-size="11.5" class="sans">• Strict CSP + Cross-Site Origin gate</text>
+      <text x="14" y="60" fill="#fef3c7" font-size="11.5" class="sans">• SHA-256 salted rate-limit &amp; secrets</text>
+      <text x="14" y="76" fill="#fde68a" font-size="11.5" class="sans">• HoneyPot + 32KB JSON validation</text>
+    </g>
+
+    <!-- STAGE 4 (Top-Right Isometric Block): D1 / SQLite & Audit -->
+    <g transform="translate(965, 206)" class="bob-b">
+      <ellipse cx="0" cy="76" rx="108" ry="26" fill="#000000" fill-opacity="0.45" />
+      <polygon points="-98,0 0,48 0,68 -98,20" fill="#112b21" stroke="#34d399" stroke-width="1.2" />
+      <polygon points="0,48 98,0 98,20 0,68" fill="#081812" stroke="#22c55e" stroke-width="1.2" />
+      <polygon points="0,-48 98,0 0,48 -98,0" fill="url(#isoSlate)" stroke="#6ee7b7" stroke-width="1.5" />
+      <g transform="matrix(0.866, 0.433, -0.866, 0.433, -4, 2)">
+        <text x="-48" y="-2" fill="#4ade80" font-size="13" font-weight="800" class="mono">D1 / SQL</text>
+        <text x="-48" y="16" fill="#a7f3d0" font-size="10.5" class="sans">ACID State</text>
+      </g>
+    </g>
+    <g transform="translate(848, 282)">
+      <rect x="0" y="0" width="300" height="86" rx="10" fill="#082419" fill-opacity="0.92" stroke="#4ade80" stroke-opacity="0.45" />
+      <text x="14" y="22" fill="#4ade80" font-size="11.5" font-weight="700" class="mono">4. PERSISTENCE &amp; VERSIONING</text>
+      <text x="14" y="42" fill="#d1fae5" font-size="11.5" class="sans">• Optimistic locking (WHERE version = ?)</text>
+      <text x="14" y="60" fill="#d1fae5" font-size="11.5" class="sans">• Integer-paise quotes &amp; 90-day PII purge</text>
+      <text x="14" y="76" fill="#a7f3d0" font-size="11.5" class="sans">• Hash-checked audit trail (audit_events)</text>
+    </g>
+
+    <!-- Bottom Planes: Static Pages Store & PostgreSQL Commerce Engine -->
+    <g transform="translate(48, 412)">
+      <rect x="0" y="0" width="502" height="114" rx="12" fill="#071f1d" fill-opacity="0.95" stroke="#2dd4bf" stroke-opacity="0.45" />
+      <text x="18" y="26" fill="#5eead4" font-size="12" font-weight="700" class="mono">STATIC HOSTING ENGINE  (apps/web/src/pilotStore.mjs)</text>
+      <text x="18" y="50" fill="#e2e8f0" font-size="12.5" class="sans">
+        Zero-backend GitHub Pages compatibility via deterministic browser persistence:
+      </text>
+      <text x="18" y="72" fill="#99f6e4" font-size="12" class="sans">• Mirrors Worker validation, 6-digit India PIN rules, &amp; reference ID issuance</text>
+      <text x="18" y="92" fill="#99f6e4" font-size="12" class="sans">• Preserves private receipts &amp; withdrawal cleanup completely offline</text>
+    </g>
+
+    <g transform="translate(576, 412)">
+      <rect x="0" y="0" width="572" height="114" rx="12" fill="#181207" fill-opacity="0.95" stroke="#fbbf24" stroke-opacity="0.48" />
+      <text x="18" y="26" fill="#fbbf24" font-size="12" font-weight="700" class="mono">COMMERCE BACKEND ENGINE  (apps/api · Express + PostgreSQL + Prisma)</text>
+      <text x="18" y="50" fill="#fef3c7" font-size="12.5" class="sans">
+        High-concurrency wholesale checkout, RFQ bidding, and payment reconciliation:
+      </text>
+      <text x="18" y="72" fill="#fde68a" font-size="12" class="sans">• SERIALIZABLE transactions with sorted row locks to eliminate deadlocks</text>
+      <text x="18" y="92" fill="#fde68a" font-size="12" class="sans">• Constant-time HMAC-SHA256 webhook verification &amp; hash-chained audit logs</text>
+    </g>
+
+    <!-- Animated Neon Data Pulses Across Buses -->
+    <circle r="5" fill="#4ade80" filter="url(#nodeGlow)">
+      <animateMotion dur="3.4s" repeatCount="indefinite" path="M 190 218 L 430 218 L 690 218 L 965 218" />
+    </circle>
+    <circle r="4.5" fill="#5eead4" filter="url(#nodeGlow)">
+      <animateMotion dur="2.8s" repeatCount="indefinite" path="M 430 250 L 430 410 L 690 410" />
+    </circle>
+    <circle r="4.5" fill="#fbbf24" filter="url(#nodeGlow)">
+      <animateMotion dur="3.0s" repeatCount="indefinite" path="M 965 255 L 965 405" />
+    </circle>
+  </g>
+</svg>

@@ -1,5 +1,21 @@
 # Verification and release status
 
+## Crop photography, visual overhaul & GitHub Pages checks, 26 November 2026
+
+| Check | Result |
+| --- | --- |
+| `npm run db:generate` | Passed (`Pilot schema and immutable initial SQL migration match`) |
+| `npm run build` | Passed (Vite built `apps/web/dist` and bundled `dist/server/index.js` with `94` embedded assets including all `89` `./crops/*.webp` photos; ~`2.37 MB` gzipped) |
+| `npm run typecheck` | Passed (`tsc --noEmit -p apps/web`, `0` errors) |
+| `npm run lint` | Passed (`14` web modules, `0` syntax or safety errors) |
+| `npm run pilot:test` | `20` passed, `0` failed, `0` skipped |
+| `npm test` | `12` passed, `0` failed, `0` skipped (validating `89` catalog entries and verifying all `89` `.webp` crop files exist cleanly on disk) |
+| `npm --prefix apps/api run build` / `lint` / `test` | Build & lint passed across `10` modules; `22` tests passed, `0` failed, `0` skipped |
+| `npm --prefix apps/mobile test` | `9` passed, `0` failed, `0` skipped |
+| Playwright browser (`127.0.0.1:4173`) | Verified all `89/89` produce images loaded cleanly (`naturalWidth > 0`, `0` broken images), `0` console errors, English + Hindi UI switch, desktop (`1440×900`) & mobile (`390×844`, `overflow: false`), buyer request submission (`KS-974D9E3961C3`), and `/__local/signin` Operations Desk |
+
+Total automated tests passing: **63** (`20` Worker + `12` Web + `22` API + `9` Mobile).
+
 ## Humanized web, Produce Directory & GitHub Pages checks, 26 November 2026
 
 | Check | Result |

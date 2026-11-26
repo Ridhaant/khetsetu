@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, statSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   PRODUCE_GROUPS,
   SEASONS,
@@ -7,6 +10,8 @@ import {
   filterProduceCatalog,
   produceCatalog,
 } from '../src/produceCatalog.mjs';
+
+const CROPS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'crops');
 
 test('produce catalog includes comprehensive Indian fruits, vegetables, and staples', () => {
   const counts = catalogSummaryCounts();
@@ -27,6 +32,11 @@ test('produce catalog includes comprehensive Indian fruits, vegetables, and stap
     assert.ok(Array.isArray(item.origins) && item.origins.length > 0);
     assert.ok(['kg', 'quintal', 'tonne', 'crate', 'box'].includes(item.unit));
     assert.ok(item.typicalMoq > 0);
+    assert.equal(item.image, `./crops/${item.id}.webp`);
+
+    const assetPath = join(CROPS_DIR, `${item.id}.webp`);
+    assert.ok(existsSync(assetPath), `missing produce image file for ${item.id}: ${assetPath}`);
+    assert.ok(statSync(assetPath).size > 1000, `produce image for ${item.id} unexpectedly small`);
   }
 });
 

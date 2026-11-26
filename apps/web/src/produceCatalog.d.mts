@@ -19,6 +19,7 @@ export type ProduceItem = {
   unit: 'kg' | 'quintal' | 'tonne' | 'crate' | 'box';
   typicalMoq: number;
   accent: string;
+  image: string;
 };
 
 export const PRODUCE_GROUPS: { id: ProduceGroupId; en: string; hi: string }[];
