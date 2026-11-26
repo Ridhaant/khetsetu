@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 440" width="100%" height="100%" role="img" aria-label="KhetSetu 3D Isometric Serializable Concurrency and Integrity Mechanics">
+  <defs>
+    <linearGradient id="ksBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#05130d" />
+      <stop offset="50%" stop-color="#091f16" />
+      <stop offset="100%" stop-color="#040d09" />
+    </linearGradient>
+    <pattern id="ksGrid" width="52" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 26 0 L 52 15 L 26 30 L 0 15 Z" fill="none" stroke="#134e4a" stroke-width="0.65" stroke-opacity="0.45" />
+    </pattern>
+    <radialGradient id="ksGlow" cx="50%" cy="48%" r="48%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.20" />
+      <stop offset="100%" stop-color="#05130d" stop-opacity="0" />
+    </radialGradient>
+    <style>
+      @keyframes ksFloatA { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-7px); } }
+      @keyframes ksFloatB { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(6px); } }
+      @keyframes ksFlow { to { stroke-dashoffset: -44; } }
+      @keyframes ksPulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 1; } }
+      .ks-a { animation: ksFloatA 4.4s ease-in-out infinite; }
+      .ks-b { animation: ksFloatB 5.1s ease-in-out infinite; }
+      .ks-wire { stroke-dasharray: 7 5; animation: ksFlow 1.7s linear infinite; }
+      .ks-dot { animation: ksPulse 2s ease-in-out infinite; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="440" rx="18" fill="url(#ksBg)" />
+  <rect width="1200" height="440" rx="18" fill="url(#ksGrid)" />
+  <rect width="1200" height="440" rx="18" fill="url(#ksGlow)" />
+  <rect x="1" y="1" width="1198" height="438" rx="17" fill="none" stroke="#115e59" stroke-width="1.5" />
+
+  <!-- Title -->
+  <text x="44" y="42" fill="#34d399" font-family="Consolas, monospace" font-size="11.5" font-weight="700" letter-spacing="1.6">CONCURRENCY CONTROL · INTEGER-PAISE LEDGER · ZERO-TRUST BOUNDARY</text>
+  <text x="44" y="72" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="24" font-weight="800">3D SERIALIZABLE Locking &amp; Dual-Runtime Execution Core</text>
+
+  <!-- Animated Bus Conduits -->
+  <path d="M 276,225 L 334,225 M 574,225 L 632,225 M 872,225 L 930,225" fill="none" stroke="#34d399" stroke-width="2.5" class="ks-wire" />
+
+  <!-- Node 1: Sorted Lock Ordering -->
+  <g transform="translate(44, 114)">
+    <g class="ks-a">
+      <rect x="0" y="0" width="232" height="278" rx="14" fill="#062117" stroke="#10b981" stroke-opacity="0.7" />
+      <g transform="translate(116, 68)">
+        <polygon points="0,-30 42,-6 0,18 -42,-6" fill="#34d399" />
+        <polygon points="-42,-6 0,18 0,48 -42,24" fill="#047857" />
+        <polygon points="42,-6 0,18 0,48 42,24" fill="#065f46" />
+        <text x="0" y="-3" text-anchor="middle" fill="#022c22" font-family="Consolas, monospace" font-size="10" font-weight="800">FOR UPDATE</text>
+      </g>
+      <text x="116" y="146" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="14.5" font-weight="800">1. Deadlock-Free Locks</text>
+      <text x="18" y="174" fill="#a7f3d0" font-family="Consolas, monospace" font-size="11">[...keys()].sort() order</text>
+      <text x="18" y="196" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• PG SERIALIZABLE retries (3×)</text>
+      <text x="18" y="216" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Eliminates AB–BA lock cycles</text>
+      <text x="18" y="236" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Outbox event + atomic stock</text>
+      <rect x="18" y="248" width="196" height="18" rx="5" fill="#022c22" />
+      <text x="116" y="261" text-anchor="middle" fill="#6ee7b7" font-family="Consolas, monospace" font-size="10">postgres-repository.ts</text>
+    </g>
+  </g>
+
+  <!-- Node 2: Optimistic CAS & Integer Paise -->
+  <g transform="translate(334, 114)">
+    <g class="ks-b">
+      <rect x="0" y="0" width="240" height="278" rx="14" fill="#062117" stroke="#2dd4bf" stroke-opacity="0.7" />
+      <g transform="translate(120, 68)">
+        <polygon points="0,-30 42,-6 0,18 -42,-6" fill="#2dd4bf" />
+        <polygon points="-42,-6 0,18 0,48 -42,24" fill="#0f766e" />
+        <polygon points="42,-6 0,18 0,48 42,24" fill="#115e59" />
+        <text x="0" y="-3" text-anchor="middle" fill="#042f2e" font-family="Consolas, monospace" font-size="10" font-weight="800">CAS v+1</text>
+      </g>
+      <text x="120" y="146" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="14.5" font-weight="800">2. Integer-Paise &amp; CAS</text>
+      <text x="18" y="174" fill="#99f6e4" font-family="Consolas, monospace" font-size="11">WHERE id=? AND version=?</text>
+      <text x="18" y="196" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Math.round(rupees × 100)</text>
+      <text x="18" y="216" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Stale quote updates → 409</text>
+      <text x="18" y="236" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Zero float64 penny drift</text>
+      <rect x="18" y="248" width="204" height="18" rx="5" fill="#042f2e" />
+      <text x="120" y="261" text-anchor="middle" fill="#5eead4" font-family="Consolas, monospace" font-size="10">worker/pilot.mjs · domain.mjs</text>
+    </g>
+  </g>
+
+  <!-- Node 3: Zero-Trust HMAC & Privacy Gate -->
+  <g transform="translate(632, 114)">
+    <g class="ks-a">
+      <rect x="0" y="0" width="240" height="278" rx="14" fill="#062117" stroke="#f59e0b" stroke-opacity="0.7" />
+      <g transform="translate(120, 68)">
+        <polygon points="0,-30 42,-6 0,18 -42,-6" fill="#fbbf24" />
+        <polygon points="-42,-6 0,18 0,48 -42,24" fill="#b45309" />
+        <polygon points="42,-6 0,18 0,48 42,24" fill="#92400e" />
+        <text x="0" y="-3" text-anchor="middle" fill="#451a03" font-family="Consolas, monospace" font-size="10" font-weight="800">HMAC-256</text>
+      </g>
+      <text x="120" y="146" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="14.5" font-weight="800">3. Zero-Trust Crypto Gate</text>
+      <text x="18" y="174" fill="#fde68a" font-family="Consolas, monospace" font-size="11">crypto.timingSafeEqual(raw)</text>
+      <text x="18" y="196" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• Exact raw-body webhook verify</text>
+      <text x="18" y="216" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• SHA-256 secret receipts</text>
+      <text x="18" y="236" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• 90-day PII auto-scrubbing</text>
+      <rect x="18" y="248" width="204" height="18" rx="5" fill="#451a03" />
+      <text x="120" y="261" text-anchor="middle" fill="#fcd34d" font-family="Consolas, monospace" font-size="10">payments.ts · index.mjs (CSP)</text>
+    </g>
+  </g>
+
+  <!-- Node 4: Dual Runtime Adapter & 89-Crop Bundle -->
+  <g transform="translate(930, 114)">
+    <g class="ks-b">
+      <rect x="0" y="0" width="226" height="278" rx="14" fill="#062117" stroke="#38bdf8" stroke-opacity="0.7" />
+      <g transform="translate(113, 68)">
+        <polygon points="0,-30 42,-6 0,18 -42,-6" fill="#38bdf8" />
+        <polygon points="-42,-6 0,18 0,48 -42,24" fill="#0369a1" />
+        <polygon points="42,-6 0,18 0,48 42,24" fill="#075985" />
+        <text x="0" y="-3" text-anchor="middle" fill="#082f49" font-family="Consolas, monospace" font-size="10" font-weight="800">D1 / SPA</text>
+      </g>
+      <text x="113" y="146" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="14.5" font-weight="800">4. Edge / Pages Fallback</text>
+      <text x="16" y="174" fill="#bae6fd" font-family="Consolas, monospace" font-size="11">/api/pilot/* -&gt; pilotStore</text>
+      <text x="16" y="196" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• 94 packed base64 assets</text>
+      <text x="16" y="216" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• 89 cropped WebP (0 hotlinks)</text>
+      <text x="16" y="236" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">• 63 passing CI test gates</text>
+      <rect x="16" y="248" width="194" height="18" rx="5" fill="#082f49" />
+      <text x="113" y="261" text-anchor="middle" fill="#7dd3fc" font-family="Consolas, monospace" font-size="10">pilotClient.ts · build.mjs</text>
+    </g>
+  </g>
+</svg>

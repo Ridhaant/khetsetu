@@ -103,6 +103,10 @@ All screenshots below were captured directly from live Playwright runs against t
 
 ### Key Systems Engineering Highlights
 
+<p align="center">
+  <img src="docs/assets/serializable-commerce-3d.svg" alt="KhetSetu 3D Isometric SERIALIZABLE Locking, Integer-Paise and Dual-Runtime Core" width="100%" />
+</p>
+
 - **Single-Origin Asset Bundling Under Strict CSP (`worker/index.mjs`, `scripts/build.mjs`)**
   The edge Worker serves every document under `img-src 'self' data:` and `object-src 'none'`. All **89 produce `.webp` photos** (~2.2 MB combined) are pre-cropped to `400×280`, bundled into `apps/web/dist/crops/*.webp`, and embedded directly as base64 assets inside `dist/server/index.js` (`~2.37 MB` gzipped, `94` bundled assets total), eliminating third-party hotlink breakage and CSP violations.
 - **Optimistic Concurrency & Integer-Paise Accounting (`worker/pilot.mjs`)**
@@ -111,6 +115,16 @@ All screenshots below were captured directly from live Playwright runs against t
   All mutations require same-origin headers, reject non-JSON payloads or bodies exceeding `32 KB`, validate honeypot spam fields, apply SHA-256 salted per-IP rate limiting (allowing safe idempotent retries using `idempotency_key` + `payload_hash` verification), require SHA-256 hashed bearer secrets for private receipts, and support **one-click withdrawal erasure plus 90-day PII anonymization** (`scrubExpiredPersonalData`).
 - **ACID Commerce Backend & Deadlock-Free Locking (`apps/api/src/`)**
   Retained marketplace checkout orchestrates multi-seller cart splitting with per-listing stock reservations, bulk MOQ/tier pricing boundaries, hash-chained audit trails (`audit_events`), constant-time `crypto.timingSafeEqual` verification over raw HMAC-SHA256 webhook bytes (`payments.ts`), and `SERIALIZABLE` PostgreSQL transactions with sorted lock ordering (`postgres-repository.ts`) to prevent lock-order deadlocks.
+
+### Skills Applied &amp; Engineering Learnings
+
+| Domain | Technologies &amp; Patterns Used | What Was Learned &amp; Proven in Code |
+| :--- | :--- | :--- |
+| **Database &amp; Concurrency** | PostgreSQL `SERIALIZABLE`, `FOR UPDATE OF l,i`, Optimistic CAS (`version = version + 1`), Transactional Outbox | Sorting locked listing IDs lexicographically (`[...quantities.keys()].sort()`) prevents AB–BA deadlocks when concurrent carts touch overlapping inventory lots (`postgres-repository.ts`). |
+| **Precision Financial Math** | Integer-Paise Arithmetic (`Math.round`), Quantity Milligrids (`1/1000` units), Bulk MOQ Boundary Tiers | Eliminating floating-point rupee division stops penny-rounding discrepancies across multi-seller order totals and landed quotes. |
+| **Edge &amp; Security Engineering** | Cloudflare Workers, D1 SQLite, SHA-256 Salted Rate Limits, `timingSafeEqual` Raw HMAC-SHA256, Strict CSP | Signature verification must operate on raw request bytes (`payments.ts`), and browser mutations must validate origin + idempotency payload hashes before touching persistence. |
+| **Full-Stack &amp; Bilingual UI** | TypeScript, React 18, Vite 8, Express, Prisma Schema, Expo React Native, EN/HI Localization | Shipping an identical contract across Cloudflare D1 Worker and a zero-backend static SPA (`pilotClient.ts` -&gt; `pilotStore.mjs`) enables free static hosting without losing validation parity. |
+| **Automated Verification** | `node --test`, Strict `tsc --noEmit`, Custom AST Safety Linter (`scripts/check.mjs`), GitHub Actions CI | Running 63 automated tests (20 Worker + 12 Web + 22 API + 9 Mobile) caught schema drift (`db:generate`) and verified `409 Conflict`, retry idempotency, and PII erasure paths. |
 
 ---
 
@@ -160,7 +174,7 @@ khetsetu/
 │   ├── generate-pilot-migration.mjs # Verifies db/pilot-schema.sql matches drizzle/0000_assisted_pilot.sql byte-for-byte
 │   └── pilot-preview.mjs          # Local HTTP loopback server wrapping built Worker + SQLite + /__local/signin
 └── docs/
-    ├── assets/                    # Animated 3D isometric SVGs (khetsetu-3d-hero.svg, architecture-3d.svg)
+    ├── assets/                    # Animated 3D isometric SVGs (khetsetu-3d-hero.svg, architecture-3d.svg, serializable-commerce-3d.svg)
     ├── screenshots/               # Verified Playwright UI captures embedded in this README
     └── *.md                       # Architecture, PRD, Operations, Compliance & Verification logs
 ```
